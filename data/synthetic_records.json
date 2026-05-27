@@ -1,0 +1,53 @@
+{
+  "paymentIntents": [
+    {
+      "id": "intent_001",
+      "merchantName": "Office Canteen",
+      "category": "FOOD",
+      "amount": 52,
+      "decision": "NO_FRICTION",
+      "impulseScore": 8,
+      "createdAt": "2026-05-27T11:50:00.000Z"
+    },
+    {
+      "id": "intent_002",
+      "merchantName": "Late Night Eats",
+      "category": "FOOD_DELIVERY",
+      "amount": 620,
+      "decision": "DELAY",
+      "impulseScore": 74,
+      "createdAt": "2026-05-27T11:54:00.000Z"
+    },
+    {
+      "id": "intent_003",
+      "merchantName": "Flash Sale Mall",
+      "category": "SHOPPING",
+      "amount": 3499,
+      "decision": "BUDGET_OVERRIDE",
+      "impulseScore": 81,
+      "createdAt": "2026-05-27T11:58:00.000Z"
+    }
+  ],
+  "spendRules": [
+    {
+      "id": "rule_001",
+      "name": "Late-night food brake",
+      "category": "FOOD_DELIVERY",
+      "thresholdAmount": 500,
+      "maxWeeklyCount": 2,
+      "friction": "DELAY_60_SECONDS",
+      "active": true,
+      "createdAt": "2026-05-27T10:20:00.000Z"
+    },
+    {
+      "id": "rule_002",
+      "name": "Shopping budget override",
+      "category": "SHOPPING",
+      "thresholdAmount": 2500,
+      "maxWeeklyCount": 1,
+      "friction": "ASK_REASON",
+      "active": true,
+      "createdAt": "2026-05-27T10:25:00.000Z"
+    }
+  ]
+}
