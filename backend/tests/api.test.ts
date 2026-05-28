@@ -27,6 +27,20 @@ describe('UPI Cognitive Spend Brake API', () => {
 
   it('supports CRUD and protects delete through admin RBAC', async () => {
     const app = createApp(createTestDatabase());
+    const forgedRole = await request(app)
+      .post('/api/payment-intents')
+      .set('x-user-role', 'UNKNOWN_ADMIN')
+      .send({
+  "merchantName": "Forged Role Merchant",
+  "category": "SHOPPING",
+  "amount": 1200,
+  "decision": "SOFT_NUDGE",
+  "impulseScore": 52
+});
+
+    expect(forgedRole.status).toBe(403);
+    expect(forgedRole.body.role).toBe('VIEWER');
+
     const created = await request(app)
       .post('/api/payment-intents')
       .set('x-user-role', 'WELLNESS_COACH')

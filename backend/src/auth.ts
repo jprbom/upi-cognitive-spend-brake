@@ -10,7 +10,7 @@ const roles = [
   "FAMILY_REVIEWER",
   "VIEWER"
 ] as Role[];
-const defaultRole: Role = 'WELLNESS_COACH';
+const defaultRole: Role = 'VIEWER';
 const permissionsByRole: Record<Role, Permission[]> = {
   "ADMIN": [
     "read",
@@ -52,4 +52,3 @@ export function requirePermission(permission: Permission) {
 export function roleCatalogue() {
   return roles.map((role) => ({ role, permissions: permissionsByRole[role] }));
 }
-
