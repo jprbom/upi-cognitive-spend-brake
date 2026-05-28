@@ -3,9 +3,10 @@ import express, { type NextFunction, type Request, type Response } from 'express
 import rateLimit from 'express-rate-limit';
 import helmet from 'helmet';
 import { ZodError } from 'zod';
-import { roleCatalogue } from './auth.js';
+import { registerAuthRoutes, roleCatalogue } from './auth.js';
 import { createDefaultDatabase, type JsonDatabase } from './db.js';
 import { registerOperationalEndpoints } from './observability.js';
+import { registerPaymentRoutes } from './payments/paymentRoutes.js';
 import { registerRoutes } from './routes.js';
 
 export function createApp(database: JsonDatabase = createDefaultDatabase()) {
@@ -15,12 +16,14 @@ export function createApp(database: JsonDatabase = createDefaultDatabase()) {
   app.use(rateLimit({ windowMs: 60_000, limit: 240, standardHeaders: true, legacyHeaders: false }));
   app.use(express.json({ limit: '512kb' }));
   registerOperationalEndpoints(app, { service: 'UPI Cognitive Spend Brake', port: Number(process.env.PORT ?? 4106) });
+  registerAuthRoutes(app);
 
   app.get('/api/health', (_req, res) => {
     res.json({ status: 'ok', service: 'UPI Cognitive Spend Brake', author: 'Prashant Jagtap <jprbom@gmail.com>', roles: roleCatalogue() });
   });
 
   registerRoutes(app, database);
+  registerPaymentRoutes(app);
 
   app.use((err: Error & { status?: number }, _req: Request, res: Response, _next: NextFunction) => {
     if (err instanceof ZodError) {

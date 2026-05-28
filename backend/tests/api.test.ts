@@ -1,14 +1,17 @@
 import request from 'supertest';
 import { describe, expect, it } from 'vitest';
 import { createApp } from '../src/app.js';
+import { signDemoToken, type Role } from '../src/auth.js';
 import { createTestDatabase } from '../src/db.js';
+
+const bearer = (role: Role) => 'Bearer ' + signDemoToken(role);
 
 describe('UPI Cognitive Spend Brake API', () => {
   it('returns an explainable domain decision', async () => {
     const app = createApp(createTestDatabase());
     const response = await request(app)
       .post('/api/brake-decisions')
-      .set('x-user-role', 'WELLNESS_COACH')
+      .set('Authorization', bearer('WELLNESS_COACH'))
       .send({
   "amount": 620,
   "category": "FOOD_DELIVERY",
@@ -43,7 +46,7 @@ describe('UPI Cognitive Spend Brake API', () => {
 
     const created = await request(app)
       .post('/api/payment-intents')
-      .set('x-user-role', 'WELLNESS_COACH')
+      .set('Authorization', bearer('WELLNESS_COACH'))
       .send({
   "merchantName": "Late Night Eats",
   "category": "FOOD_DELIVERY",
@@ -57,12 +60,12 @@ describe('UPI Cognitive Spend Brake API', () => {
 
     const denied = await request(app)
       .delete('/api/payment-intents/' + created.body.id)
-      .set('x-user-role', 'WELLNESS_COACH');
+      .set('Authorization', bearer('WELLNESS_COACH'));
     expect(denied.status).toBe(403);
 
     const deleted = await request(app)
       .delete('/api/payment-intents/' + created.body.id)
-      .set('x-user-role', 'ADMIN');
+      .set('Authorization', bearer('ADMIN'));
     expect(deleted.status).toBe(204);
   });
 
@@ -70,7 +73,7 @@ describe('UPI Cognitive Spend Brake API', () => {
     const app = createApp(createTestDatabase());
     const response = await request(app)
       .post('/api/mock-upi')
-      .set('x-user-role', 'OPS_MANAGER')
+      .set('Authorization', bearer('WELLNESS_COACH'))
       .send({
         txnId: 'TXN-DEMO-001',
         payerVpa: 'payer@oksbi',

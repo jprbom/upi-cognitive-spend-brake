@@ -18,6 +18,17 @@ type MockUpiResult = {
   settlement: { mode: string; preSettlementHold: boolean; estimatedSettlementSeconds: number };
   risk: { score: number; decision: string; reasonCodes: string[] };
 };
+type PaymentLifecycleResult = {
+  txnId: string;
+  orderId: string;
+  paymentId: string;
+  finalStatus: string;
+  rrn?: string;
+  timeline: Array<{ sequence: number; state: string; actor: string; reasonCode?: string }>;
+  webhooks: Array<{ eventId: string; event: string }>;
+  reconciliation: { settlementStatus: string; settlementBatchId?: string };
+  adapters: { railStatus: string; tpapStatus: string; bankHealth: { degradationLevel: string; successRate: number; p95LatencyMs: number; timeoutRate: number } };
+};
 
 const CONFIG = {
   "title": "UPI Cognitive Spend Brake",
@@ -87,6 +98,7 @@ export default function App() {
   const [domainResult, setDomainResult] = useState<DomainResult | null>(null);
   const [tabOutput, setTabOutput] = useState<TabOutput | null>(null);
   const [mockResult, setMockResult] = useState<MockUpiResult | null>(null);
+  const [paymentSimulation, setPaymentSimulation] = useState<PaymentLifecycleResult | null>(null);
   const [notice, setNotice] = useState('Ready: all CTAs use synthetic test data and mocked UPI rails.');
   const [amount, setAmount] = useState(875);
 
@@ -140,6 +152,25 @@ export default function App() {
       setNotice('Mock UPI rail returned ' + response.npciStatus + ' with RRN ' + response.rrn + '.');
     } catch (error) {
       setNotice('Mock UPI failed: ' + (error instanceof Error ? error.message : 'unknown error'));
+    }
+  }
+
+  async function runPaymentEcosystemScenario(tab: WorkflowTab = activeTab) {
+    try {
+      const response = await apiRequest<PaymentLifecycleResult>('/payments/initiate', role, {
+        method: 'POST',
+        body: JSON.stringify({
+          amountPaise: Math.max(1, amount) * 100,
+          purpose: tab.label + ' lifecycle demo',
+          scenario: tab.mockScenario ?? 'HAPPY_PATH',
+          flow: 'UPI_LITE',
+          spendBrakeDecision: 'COOLING_PERIOD'
+        })
+      });
+      setPaymentSimulation(response);
+      setNotice('Payment ecosystem simulator completed ' + response.finalStatus + ' with ' + response.timeline.length + ' lifecycle events.');
+    } catch (error) {
+      setNotice('Payment ecosystem failed: ' + (error instanceof Error ? error.message : 'unknown error'));
     }
   }
 
@@ -286,6 +317,7 @@ export default function App() {
               <button onClick={runActiveTabCta}><Sparkles size={16} />{activeTab.cta}</button>
               <button onClick={runDomainDecision}><BrainCircuit size={16} />{CONFIG.domain.cta}</button>
               <button onClick={() => runMockRail()}><Network size={16} />Mock UPI/NPCI</button>
+              <button onClick={() => runPaymentEcosystemScenario()}><Network size={16} />Payment Ecosystem</button>
               <button onClick={createRecord}><Activity size={16} />Create Test Data</button>
               <button onClick={patchSelected}><CheckCircle2 size={16} />Mark Reviewed</button>
               <button onClick={removeSelected}><Trash2 size={16} />Delete Selected</button>
@@ -318,6 +350,10 @@ export default function App() {
           <div className="panel">
             <div className="panel-title"><Sparkles size={18} /> Active Tab Output</div>
             {tabOutput ? <TabOutputPanel output={tabOutput} /> : <p>Click the selected tab CTA to produce test-data output for this workflow.</p>}
+          </div>
+          <div className="panel span-three">
+            <div className="panel-title"><Network size={18} /> Payment Ecosystem Timeline</div>
+            {paymentSimulation ? <PaymentTimeline result={paymentSimulation} /> : <p>Run Payment Ecosystem to simulate user-owned spend brake, cooling-off or override, TPAP handoff, bank/NPCI state, webhook, and settlement.</p>}
           </div>
           <div className="panel">
             <div className="panel-title"><Eye size={18} /> Drill-down</div>
@@ -361,6 +397,36 @@ function TabOutputPanel({ output }: { output: TabOutput }) {
       <p>{output.summary}</p>
       <div className="output-grid">{output.facts.map((fact) => <span key={fact}>{fact}</span>)}</div>
       <div className="reason-list">{output.codes.map((code) => <span className="chip" key={code}>{code}</span>)}</div>
+    </div>
+  );
+}
+
+function PaymentTimeline({ result }: { result: PaymentLifecycleResult }) {
+  const visibleEvents = result.timeline.slice(0, 10);
+  return (
+    <div className="payment-timeline">
+      <div className="timeline-summary">
+        <strong>{result.finalStatus}</strong>
+        <span>Rail {result.adapters.railStatus}</span>
+        <span>TPAP {result.adapters.tpapStatus}</span>
+        <span>Bank {result.adapters.bankHealth.degradationLevel}</span>
+        <span>Settlement {result.reconciliation.settlementStatus}</span>
+      </div>
+      <div className="timeline-rail">
+        {visibleEvents.map((event) => (
+          <div className="timeline-node" key={event.sequence}>
+            <i>{event.sequence}</i>
+            <strong>{event.state}</strong>
+            <span>{event.actor}</span>
+            {event.reasonCode ? <small>{event.reasonCode}</small> : null}
+          </div>
+        ))}
+      </div>
+      <div className="reason-list">
+        <span className="chip">RRN {result.rrn ?? 'pending'}</span>
+        <span className="chip">{result.webhooks.length} webhook events</span>
+        <span className="chip">Order {result.orderId}</span>
+      </div>
     </div>
   );
 }
