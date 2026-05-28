@@ -22,5 +22,13 @@
   },
   "devDependencies": {
     "vite": "^6.4.2"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jprbom/upi-cognitive-spend-brake.git"
+  },
+  "homepage": "https://github.com/jprbom/upi-cognitive-spend-brake#readme",
+  "bugs": {
+    "url": "https://github.com/jprbom/upi-cognitive-spend-brake/issues"
   }
 }
