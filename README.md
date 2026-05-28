@@ -1,183 +1,79 @@
 <p align="center">
-  <img src="docs/assets/hero.svg" width="100%" alt="UPI Cognitive Spend Brake rich animated hero infographic">
+  <img src="https://capsule-render.vercel.app/api?type=waving&height=230&color=gradient&text=UPI%20Cognitive%20Spend%20Brake&fontAlign=50&fontAlignY=38&fontSize=42&fontColor=ffffff&desc=Responsible%20payment%20decision%20support%20for%20digital%20UPI%20moments&descAlign=50&descAlignY=60&descSize=15&animation=fadeIn" width="100%" alt="UPI Cognitive Spend Brake animated hero banner"/>
 </p>
 
 <p align="center">
-  <img src="frontend/public/logo.svg" width="92" alt="UPI Cognitive Spend Brake animated logo">
-</p>
-
-<h1 align="center">UPI Cognitive Spend Brake</h1>
-
-<p align="center"><strong>AI friction layer for responsible digital spending before simulated UPI payment approval.</strong></p>
-
-<p align="center">
-  <img alt="TypeScript" src="https://img.shields.io/badge/TypeScript-5.9-3178c6?style=for-the-badge&logo=typescript&logoColor=white">
-  <img alt="React" src="https://img.shields.io/badge/React-19-149eca?style=for-the-badge&logo=react&logoColor=white">
-  <img alt="Express" src="https://img.shields.io/badge/Express-5-111827?style=for-the-badge&logo=express&logoColor=white">
-  <img alt="Mock UPI" src="https://img.shields.io/badge/NPCI%20UPI-Mocked%20Sandbox-f43f5e?style=for-the-badge">
-  <img alt="Security" src="https://img.shields.io/badge/Audit-0%20High%20Vulns-16a34a?style=for-the-badge&logo=securityscorecard&logoColor=white">
-  <img alt="License" src="https://img.shields.io/badge/License-Proprietary%20All%20Rights%20Reserved-991b1b?style=for-the-badge">
+  <img src="https://readme-typing-svg.demolab.com?font=Inter&weight=700&size=22&duration=2600&pause=900&center=true&vCenter=true&width=900&lines=Investor+Showcase+%7C+No+Proprietary+Source+Code;Responsible+UPI+Payment+UX;Context-aware+Decision+Support+for+Digital+Payments" alt="animated project narrative"/>
 </p>
 
 <p align="center">
-  <a href="#concept">Concept</a> &middot;
-  <a href="#working-demo">Working Demo</a> &middot;
-  <a href="#bfsi--fintech-benefit">BFSI Benefit</a> &middot;
-  <a href="#aiml--dl-layer">AIML/DL</a> &middot;
-  <a href="#run-locally">Run Locally</a>
+  <img src="https://img.shields.io/badge/Showcase-Concept%20Repository-0f172a?style=for-the-badge">
+  <img src="https://img.shields.io/badge/Domain-UPI%20%7C%20Payment%20UX%20%7C%20Responsible%20AI-f43f5e?style=for-the-badge">
+  <img src="https://img.shields.io/badge/Code-Not%20Exposed-991b1b?style=for-the-badge">
 </p>
 
-## Concept
+# UPI Cognitive Spend Brake
 
-UPI Cognitive Spend Brake is a full-stack UPI-native AI infrastructure prototype. It combines a React RBAC command center, secure Express APIs, CRUD data operations, concept-specific decisioning, and a mocked NPCI/UPI rail response layer. The repo is designed for portfolio demonstration and SDLC review, not live payment processing.
+**Responsible payment decision support for selected digital UPI moments.**
 
-The system uses synthetic data to show how a BFSI or fintech product team could operate ai friction layer for responsible digital spending before simulated upi payment approval. without touching real customer, bank, PSP, NPCI, or UPI rail data.
+This repository is a public concept showcase. It explains the product thesis, payment-UX model, responsible AI posture and investor-facing roadmap. It does not expose proprietary source code, scoring logic, prompts, datasets, credentials, payment simulation internals or production integrations.
 
-## Prototype Positioning
+---
 
-This repo is intentionally positioned as a **runnable synthetic prototype**, not a production fintech system. The frontend, APIs, CRUD, RBAC workflow, mock UPI response, tests, Docker files, and documentation are real. The payment rail, security authority, persistence, and AIML/DL models are controlled demo layers.
+## Why this matters
 
-Use the phrasing: "UPI-native AI product prototype with SDLC packaging." Avoid the phrasing: "production-ready behavioural payment-control platform."
+Instant payment systems create speed and convenience. Some digital payment moments still need better context, clearer confirmation and transparent user control.
 
-## Latest Enhancements
+## Product thesis
 
-This release closes the latest audit loop with practical, testable upgrades:
+UPI Cognitive Spend Brake is a context-aware decision-support layer for UPI-style payments. It evaluates selected payment contexts and helps create a cleaner user experience through transparent nudges, confirmation flows and audit-ready decision logs.
 
-| Area | Enhancement |
-| --- | --- |
-| Payment lifecycle | Added a five-adapter payment ecosystem simulator: PG, PA, TPAP, PSP/bank, and NPCI-style UPI rail. |
-| Webhooks | Added HMAC webhook signatures, duplicate-event idempotency, out-of-order delivery handling, and terminal-state governance. |
-| Security | Replaced raw role headers with signed local demo bearer tokens from `/api/auth/demo-token`; forged `x-user-role` is ignored. |
-| Frontend | Added a **Payment Ecosystem Timeline** CTA and visual lifecycle panel for user-owned spend brake, TPAP handoff, and settlement. |
-| Responsible spending | Payment scenarios now include spend-brake decision hooks, UPI Lite flow simulation, cooling-off, and override-ready lifecycle events. |
-| AIML/DL | Upgraded `ml/train_model.py` to generate 10,000 synthetic rows, train/test split, metrics, confusion matrix, model card, and feature importance. |
-| Documentation | Added API contract, data model, threat model, observability, model governance, deployment, enterprise architecture, and investor due-diligence docs. |
-| Validation | `npm run verify` and browser E2E smoke tests pass locally with payment ecosystem coverage. |
+---
 
-## Working Demo
+## Concept flow
 
-The frontend now has working tabs, CTAs, row drill-downs, create/patch/delete CRUD actions, domain-specific AI decision calls, and a mock UPI/NPCI request-response flow.
-
-| Flow | What works |
-| --- | --- |
-| RBAC | Role selector requests a signed local demo bearer token. Forged `x-user-role` headers are ignored. |
-| Tabs | Every sidebar tab changes active content and drill-down context. |
-| CRUD | The primary workspace can create, patch, inspect, and delete synthetic records. |
-| AI decision | `/brake-decisions` returns explainable reason codes. |
-| Mock UPI | `/api/mock-upi` returns RRN, UPI request id, bank reference, response code, settlement state, and webhook metadata. |
-| Payment ecosystem | `/api/payments/initiate` simulates PG, PA, TPAP, PSP/bank, NPCI-style rail, webhook, refund, dispute, and settlement lifecycle. |
-
-## Payment Ecosystem Simulator
-
-This repository does not use live NPCI, bank, PSP, TPAP, payment aggregator, or payment gateway APIs. It implements a public-safe simulator for product architecture, AI decisioning, fraud/risk workflows, and enterprise SDLC demonstration.
-
-The simulator includes five adapters: NPCI-style UPI rail, TPAP, PSP/bank, payment aggregator, and payment gateway. It also includes HMAC webhook signatures, duplicate-event idempotency, out-of-order webhook handling, settlement batches, disputes, refunds, and a frontend **Payment Ecosystem Timeline** panel.
-
-See [`docs/PAYMENT_ECOSYSTEM_SIMULATOR.md`](docs/PAYMENT_ECOSYSTEM_SIMULATOR.md).
-
-## BFSI / Fintech Benefit
-
-Banks, wallets, and consumer fintech apps can use this architecture to offer responsible pre-payment nudges, reduce harmful impulse spending, and preserve user autonomy with explainable friction.
-
-This project is useful for senior payment, fintech, digital banking, risk, platform, and AI product portfolios because it shows the full product chain: business concept, test data, secure APIs, RBAC, frontend workflows, explainability, model training, CI, documentation, and deployment thinking.
-
-## Architecture
-
-<p align="center">
-  <img src="docs/assets/system-map.svg" width="100%" alt="UPI Cognitive Spend Brake architecture system map">
-</p>
-
-~~~mermaid
+```mermaid
 flowchart LR
-  UI["React RBAC Command Center"] --> AUTH["Signed Demo Token"]
-  AUTH --> API["Express API"]
-  API --> RBAC["RBAC + Zod + Helmet + Rate Limit"]
-  API --> CRUD["Synthetic CRUD Store"]
-  API --> AI["Spend Brake Engine"]
-  API --> RULES["User-owned Guardrails"]
-  RULES --> SIM["Payment Ecosystem Simulator"]
-  SIM --> NUDGE["Nudge / Cool-off / Override"]
-  NUDGE --> UI
-  AI --> UI
-~~~
-
-## AIML / DL Layer
-
-The repository includes working Python code in `ml/train_model.py`.
-
-It trains:
-
-- an explainable logistic-regression AIML baseline
-- a compact one-hidden-layer neural-network model as the DL demonstration
-- 10,000 synthetic rows with train/test split
-- holdout metrics, confusion matrix, feature importance, and model-card artifacts at `ml/model_card.json`, `ml/metrics.json`, and `ml/feature_importance.json`
-
-Run:
-
-```bash
-python ml/train_model.py
+  A[Payment intent] --> B[Context check]
+  B --> C[Decision support signal]
+  C --> D[Confirm or continue]
+  D --> E[Payment UX outcome]
+  E --> F[Learning and governance loop]
 ```
 
-Features used for this concept include `amount_paise`, `bank_success_rate`, `collect_decline_rate`, `risk_score`, `latency_ms`, `device_trust_score`, `merchant_trust_score`, and `retry_count`, with the app layer adding spend-brake signals such as amount, category risk, budget used, late-night context, repeated count, UPI Lite use, and self-control rule hit.
+## Capability map
 
-## Mock UPI / NPCI API
+| Layer | Capability | Value |
+|---|---|---|
+| Market | UPI payment UX intelligence | Improves trust and clarity |
+| Product | Context-aware confirmation flow | Supports better user decisions |
+| AI/ML | Pattern and context support | Improves timing of nudges |
+| Platform | API/SDK integration model | Fits payment and fintech apps |
+| Governance | Transparent logs and user control | Supports responsible AI posture |
 
-Example request:
+---
 
-```json
-{
-  "txnId": "TXN-DEMO-001",
-  "payerVpa": "payer@oksbi",
-  "payeeVpa": "merchant@upi",
-  "amount": 499,
-  "flow": "UPI_INTENT",
-  "purpose": "portfolio test flow",
-  "riskScore": 24,
-  "scenario": "HAPPY_PATH"
-}
-```
+## What is intentionally not public
 
-The response is intentionally NPCI-like for demos, but fully synthetic:
+- Source code
+- Payment logic
+- Risk rules
+- Prompts or model details
+- Datasets or credentials
+- Production deployment details
 
-- `gateway: NPCI_UPI_MOCK`
-- `rrn`, `upiRequestId`, `bankRefId`
-- `npciStatus`, `responseCode`, `responseMessage`
-- settlement and pre-settlement hold metadata
-- risk decision and reason codes
-- synthetic PSP/bank webhook callback state
+## Success metrics
 
-## Run Locally
+| Metric | Why it matters |
+|---|---|
+| Confirmation completion rate | UX fit |
+| User override behaviour | Product calibration |
+| Repeat intervention quality | AI value |
+| Audit log completeness | Governance readiness |
 
-```bash
-npm install
-npm run verify
-npm --workspace backend run start
-npm --workspace frontend run preview
-python ml/train_model.py
-```
+## Positioning
 
-Frontend: `http://127.0.0.1:5106`
+UPI Cognitive Spend Brake sits at the intersection of UPI, digital payment UX, responsible AI and context-aware payment decision support.
 
-Backend health: `http://127.0.0.1:4106/api/health`
-
-## Documentation
-
-- [Architecture](docs/ARCHITECTURE.md)
-- [API](docs/API.md)
-- [Diagrams](docs/DIAGRAMS.md)
-- [Security](docs/SECURITY.md)
-- [SDLC](docs/SDLC.md)
-- [Testing](docs/TESTING.md)
-- [Prototype Audit Response](docs/PROTOTYPE_AUDIT.md)
-
-## License and Proprietary Rights
-
-This repository is **public for portfolio review only**. It is **not open source**.
-
-Copyright (c) 2026 Prashant Jagtap. All Rights Reserved.
-
-No one may use, copy, modify, distribute, deploy, commercialize, train on, or create derivative works from this code, documentation, diagrams, synthetic data, logos, UI designs, concepts, or repository materials without prior written permission from Prashant Jagtap.
-
-See [LICENSE](LICENSE) and [NOTICE](NOTICE.md). Permission requests: <jprbom@gmail.com>.
-
-**Author:** Prashant Jagtap <jprbom@gmail.com>
+**Owner:** [Prashant Jagtap](https://github.com/jprbom)  
+**Repository type:** Public showcase, proprietary concept
