@@ -61,12 +61,13 @@ const CONFIG = {
     "cta": "Evaluate Spend Intent",
     "payload": {
       "amount": 620,
-      "categoryRisk": 0.68,
+      "category": "FOOD_DELIVERY",
+      "hour": 23,
+      "weeklyCategoryCount": 4,
       "monthlyBudgetUsed": 0.83,
-      "lateNight": true,
-      "repeatedCategoryCount": 4,
-      "salaryDaySpike": false,
-      "userRuleActive": true
+      "selfControlRuleHit": true,
+      "upiLite": false,
+      "emotionalRisk": 0.68
     },
     "resultKey": "decision",
     "riskKey": "impulseScore"
