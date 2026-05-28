@@ -30,5 +30,6 @@
   "homepage": "https://github.com/jprbom/upi-cognitive-spend-brake#readme",
   "bugs": {
     "url": "https://github.com/jprbom/upi-cognitive-spend-brake/issues"
-  }
+  },
+  "license": "UNLICENSED"
 }
