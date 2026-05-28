@@ -14,120 +14,124 @@
   <img alt="TypeScript" src="https://img.shields.io/badge/TypeScript-5.9-3178c6?style=for-the-badge&logo=typescript&logoColor=white">
   <img alt="React" src="https://img.shields.io/badge/React-19-149eca?style=for-the-badge&logo=react&logoColor=white">
   <img alt="Express" src="https://img.shields.io/badge/Express-5-111827?style=for-the-badge&logo=express&logoColor=white">
+  <img alt="Mock UPI" src="https://img.shields.io/badge/NPCI%20UPI-Mocked%20Sandbox-f43f5e?style=for-the-badge">
   <img alt="Security" src="https://img.shields.io/badge/Audit-0%20High%20Vulns-16a34a?style=for-the-badge&logo=securityscorecard&logoColor=white">
-  <img alt="Synthetic" src="https://img.shields.io/badge/Data-Synthetic%20Only-f43f5e?style=for-the-badge">
 </p>
 
 <p align="center">
-  <a href="#product-story">Product Story</a> &middot;
-  <a href="#architecture">Architecture</a> &middot;
-  <a href="#run-locally">Run Locally</a> &middot;
-  <a href="#documentation">Documentation</a>
+  <a href="#concept">Concept</a> &middot;
+  <a href="#working-demo">Working Demo</a> &middot;
+  <a href="#bfsi--fintech-benefit">BFSI Benefit</a> &middot;
+  <a href="#aiml--dl-layer">AIML/DL</a> &middot;
+  <a href="#run-locally">Run Locally</a>
 </p>
 
-## Product Story
+## Concept
 
-A behavioral AI system that detects impulse risk, UPI Lite micro-spend leakage, late-night drift, category overuse, and self-control rule violations, then adds only the minimum useful payment friction.
+UPI Cognitive Spend Brake is a full-stack UPI-native AI infrastructure prototype. It combines a React RBAC command center, secure Express APIs, CRUD data operations, concept-specific decisioning, and a mocked NPCI/UPI rail response layer. The repo is designed for portfolio demonstration and SDLC review, not live payment processing.
 
-This is a synthetic-data, portfolio-grade UPI AI infrastructure prototype. It does not connect to live UPI rails, NPCI, PSPs, banks, account aggregators, or real customer data.
+The system uses synthetic data to show how a BFSI or fintech product team could operate ai friction layer for responsible digital spending before simulated upi payment approval. without touching real customer, bank, PSP, NPCI, or UPI rail data.
 
-**Author:** Prashant Jagtap <jprbom@gmail.com>
+## Working Demo
 
-## Experience Preview
+The frontend now has working tabs, CTAs, row drill-downs, create/patch/delete CRUD actions, domain-specific AI decision calls, and a mock UPI/NPCI request-response flow.
+
+| Flow | What works |
+| --- | --- |
+| RBAC | Role selector sends `x-user-role` to the backend. Admin can perform destructive operations. |
+| Tabs | Every sidebar tab changes active content and drill-down context. |
+| CRUD | The primary workspace can create, patch, inspect, and delete synthetic records. |
+| AI decision | `/brake-decisions` returns explainable reason codes. |
+| Mock UPI | `/api/mock-upi` returns RRN, UPI request id, bank reference, response code, settlement state, and webhook metadata. |
+
+## BFSI / Fintech Benefit
+
+Banks, wallets, and consumer fintech apps can use this architecture to offer responsible pre-payment nudges, reduce harmful impulse spending, and preserve user autonomy with explainable friction.
+
+This project is useful for senior payment, fintech, digital banking, risk, platform, and AI product portfolios because it shows the full product chain: business concept, test data, secure APIs, RBAC, frontend workflows, explainability, model training, CI, documentation, and deployment thinking.
+
+## Architecture
 
 <p align="center">
   <img src="docs/assets/system-map.svg" width="100%" alt="UPI Cognitive Spend Brake architecture system map">
 </p>
 
-## What Makes It Portfolio-Strong
-
-| Layer | What it demonstrates |
-| --- | --- |
-| Product thinking | UPI-native workflow, role-aware operating model, and explainable decisioning |
-| Frontend | Modern React/Vite command center with animated KPI panels and CRUD controls |
-| Backend | Express API with Helmet, CORS, rate limiting, RBAC, Zod validation, and JSON persistence |
-| AI simulation | Deterministic domain engine with reason codes and human-readable explanation |
-| SDLC | Project plan, API docs, security notes, tests, Docker files, and rich diagrams |
-
-## Core Modules
-
-| # | Module | Flow |
-| ---: | --- | --- |
-| 1 | Spend memory | UPI intent |
-| 2 | Impulse risk | Budget memory |
-| 3 | Budget guard | Impulse score |
-| 4 | Friction policy | Friction policy |
-| 5 | Nudge generator | Neutral nudge |
-
-## RBAC Personas
-
-`Wellness Coach` `User` `Family Reviewer`
-
-Destructive operations are admin-only. Read/write operations are guarded through a role-to-permission map in the backend middleware.
-
-## Architecture
-
 ~~~mermaid
 flowchart LR
-  UI["React RBAC Command Center"]:::ui --> API["Express API"]:::api
-  API --> SEC["Helmet + CORS + Rate Limit"]:::sec
-  API --> RBAC["RBAC Permission Gate"]:::sec
-  API --> VALID["Zod Validation"]:::sec
-  API --> CRUD["Payment Intent Simulator + Spend Brake Rules CRUD"]:::api
-  API --> ENGINE["Choose minimum useful friction Engine"]:::ai
-  CRUD --> DB[("Synthetic JSON DB")]:::data
-  ENGINE --> EXPLAIN["Reason Codes + Explanation"]:::ai
-  EXPLAIN --> UI
-
-  classDef ui fill:#ecfeff,stroke:#10b981,stroke-width:2px,color:#083344
-  classDef api fill:#fff7ed,stroke:#f43f5e,stroke-width:2px,color:#431407
-  classDef sec fill:#fee2e2,stroke:#ef4444,stroke-width:2px,color:#450a0a
-  classDef ai fill:#eef2ff,stroke:#10b981,stroke-width:2px,color:#1e1b4b
-  classDef data fill:#dcfce7,stroke:#f59e0b,stroke-width:2px,color:#052e16
+  UI["React RBAC Command Center"] --> API["Express API"]
+  API --> RBAC["RBAC + Zod + Helmet + Rate Limit"]
+  API --> CRUD["Synthetic CRUD Store"]
+  API --> AI["Domain AI Decision Engine"]
+  API --> MOCK["Mock NPCI/UPI Rail"]
+  MOCK --> UI
+  AI --> UI
 ~~~
 
-## API Surface
+## AIML / DL Layer
 
-| Purpose | Endpoint |
-| --- | --- |
-| Health and role catalogue | `GET /api/health` |
-| Dashboard metrics | `GET /api/metrics` |
-| Domain decision | `POST /api/brake-decisions` |
-| Primary CRUD | `Payment Intent Simulator` |
-| Secondary CRUD | `Spend Brake Rules` |
+The repository includes working Python code in `ml/train_model.py`.
+
+It trains:
+
+- an explainable logistic-regression AIML baseline
+- a compact one-hidden-layer neural-network model as the DL demonstration
+- a model-card artifact at `ml/model_card.json`
+
+Run:
+
+```bash
+python ml/train_model.py
+```
+
+Features used for this concept: `amount`, `category_risk`, `budget_used`, `late_night`, `repeated_count`.
+
+## Mock UPI / NPCI API
+
+Example request:
+
+```json
+{
+  "txnId": "TXN-DEMO-001",
+  "payerVpa": "payer@oksbi",
+  "payeeVpa": "merchant@upi",
+  "amount": 499,
+  "flow": "UPI_INTENT",
+  "purpose": "portfolio test flow",
+  "riskScore": 24,
+  "scenario": "HAPPY_PATH"
+}
+```
+
+The response is intentionally NPCI-like for demos, but fully synthetic:
+
+- `gateway: NPCI_UPI_MOCK`
+- `rrn`, `upiRequestId`, `bankRefId`
+- `npciStatus`, `responseCode`, `responseMessage`
+- settlement and pre-settlement hold metadata
+- risk decision and reason codes
+- synthetic PSP/bank webhook callback state
 
 ## Run Locally
 
-~~~bash
+```bash
 npm install
-npm run dev:backend
-npm run dev:frontend
-~~~
-
-Backend: http://127.0.0.1:4106
-
-Frontend: http://127.0.0.1:5176
-
-Preview build: http://127.0.0.1:5106
-
-## Verify
-
-~~~bash
 npm run verify
-~~~
+npm --workspace backend run start
+npm --workspace frontend run preview
+python ml/train_model.py
+```
 
-`npm run verify` runs TypeScript build, backend/frontend tests, and `npm audit --audit-level=high`.
+Frontend: `http://127.0.0.1:5106`
+
+Backend health: `http://127.0.0.1:4106/api/health`
 
 ## Documentation
 
-- [Project Plan](docs/PROJECT_PLAN.md)
 - [Architecture](docs/ARCHITECTURE.md)
-- [API Reference](docs/API.md)
+- [API](docs/API.md)
+- [Diagrams](docs/DIAGRAMS.md)
 - [Security](docs/SECURITY.md)
+- [SDLC](docs/SDLC.md)
 - [Testing](docs/TESTING.md)
-- [Rich Diagrams](docs/DIAGRAMS.md)
 
-## Repository
-
-`upi-cognitive-spend-brake`
-
+**Author:** Prashant Jagtap <jprbom@gmail.com>
