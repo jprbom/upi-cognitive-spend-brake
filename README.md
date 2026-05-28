@@ -39,6 +39,21 @@ This repo is intentionally positioned as a **runnable synthetic prototype**, not
 
 Use the phrasing: "UPI-native AI product prototype with SDLC packaging." Avoid the phrasing: "production-ready behavioural payment-control platform."
 
+## Latest Enhancements
+
+This release closes the latest audit loop with practical, testable upgrades:
+
+| Area | Enhancement |
+| --- | --- |
+| Payment lifecycle | Added a five-adapter payment ecosystem simulator: PG, PA, TPAP, PSP/bank, and NPCI-style UPI rail. |
+| Webhooks | Added HMAC webhook signatures, duplicate-event idempotency, out-of-order delivery handling, and terminal-state governance. |
+| Security | Replaced raw role headers with signed local demo bearer tokens from `/api/auth/demo-token`; forged `x-user-role` is ignored. |
+| Frontend | Added a **Payment Ecosystem Timeline** CTA and visual lifecycle panel for user-owned spend brake, TPAP handoff, and settlement. |
+| Responsible spending | Payment scenarios now include spend-brake decision hooks, UPI Lite flow simulation, cooling-off, and override-ready lifecycle events. |
+| AIML/DL | Upgraded `ml/train_model.py` to generate 10,000 synthetic rows, train/test split, metrics, confusion matrix, model card, and feature importance. |
+| Documentation | Added API contract, data model, threat model, observability, model governance, deployment, enterprise architecture, and investor due-diligence docs. |
+| Validation | `npm run verify` and browser E2E smoke tests pass locally with payment ecosystem coverage. |
+
 ## Working Demo
 
 The frontend now has working tabs, CTAs, row drill-downs, create/patch/delete CRUD actions, domain-specific AI decision calls, and a mock UPI/NPCI request-response flow.
@@ -74,12 +89,15 @@ This project is useful for senior payment, fintech, digital banking, risk, platf
 
 ~~~mermaid
 flowchart LR
-  UI["React RBAC Command Center"] --> API["Express API"]
+  UI["React RBAC Command Center"] --> AUTH["Signed Demo Token"]
+  AUTH --> API["Express API"]
   API --> RBAC["RBAC + Zod + Helmet + Rate Limit"]
   API --> CRUD["Synthetic CRUD Store"]
-  API --> AI["Domain AI Decision Engine"]
-  API --> MOCK["Mock NPCI/UPI Rail"]
-  MOCK --> UI
+  API --> AI["Spend Brake Engine"]
+  API --> RULES["User-owned Guardrails"]
+  RULES --> SIM["Payment Ecosystem Simulator"]
+  SIM --> NUDGE["Nudge / Cool-off / Override"]
+  NUDGE --> UI
   AI --> UI
 ~~~
 
@@ -91,7 +109,8 @@ It trains:
 
 - an explainable logistic-regression AIML baseline
 - a compact one-hidden-layer neural-network model as the DL demonstration
-- a model-card artifact at `ml/model_card.json`
+- 10,000 synthetic rows with train/test split
+- holdout metrics, confusion matrix, feature importance, and model-card artifacts at `ml/model_card.json`, `ml/metrics.json`, and `ml/feature_importance.json`
 
 Run:
 
@@ -99,7 +118,7 @@ Run:
 python ml/train_model.py
 ```
 
-Features used for this concept: `amount`, `category_risk`, `budget_used`, `late_night`, `repeated_count`.
+Features used for this concept include `amount_paise`, `bank_success_rate`, `collect_decline_rate`, `risk_score`, `latency_ms`, `device_trust_score`, `merchant_trust_score`, and `retry_count`, with the app layer adding spend-brake signals such as amount, category risk, budget used, late-night context, repeated count, UPI Lite use, and self-control rule hit.
 
 ## Mock UPI / NPCI API
 

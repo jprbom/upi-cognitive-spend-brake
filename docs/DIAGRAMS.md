@@ -8,6 +8,20 @@
   <img src="assets/system-map.svg" width="100%" alt="UPI Cognitive Spend Brake system map">
 </p>
 
+## Latest Enhancement Map
+
+~~~mermaid
+flowchart LR
+  UI["Spend Brake Timeline CTA"] --> AUTH["Signed Demo Token"]
+  AUTH --> API["Express API"]
+  API --> RULES["User-owned Guardrails"]
+  RULES --> BRAKE["Nudge / Cool-off / Override"]
+  BRAKE --> SIM["Payment Ecosystem Simulator"]
+  SIM --> TPAP["TPAP + UPI Lite Flow"]
+  TPAP --> NPCI["NPCI-style UPI Rail"]
+  NPCI --> UI
+~~~
+
 ## Product Decision Flow
 
 ~~~mermaid
@@ -37,12 +51,29 @@ sequenceDiagram
   participant Mock as Mock NPCI/UPI Rail
   participant DB as JSON Test DB
   User->>UI: Click tab, CTA, or row drill-down
-  UI->>API: Request with x-user-role
+  UI->>API: Request with signed demo bearer token
   API->>DB: Read/write synthetic records
   API->>Model: Score domain-specific risk or recommendation
   API->>Mock: Generate UPI-like response code, RRN, callback
   Mock-->>API: Sandbox response, no real money movement
   API-->>UI: Render decision, reason codes, and drill-down
+~~~
+
+## User-owned Spend Brake Lifecycle
+
+~~~mermaid
+stateDiagram-v2
+  [*] --> PAYMENT_INTENT
+  PAYMENT_INTENT --> GUARDRAIL_CHECK
+  GUARDRAIL_CHECK --> NO_FRICTION
+  GUARDRAIL_CHECK --> SOFT_NUDGE
+  GUARDRAIL_CHECK --> COOLING_PERIOD
+  COOLING_PERIOD --> USER_OVERRIDE
+  USER_OVERRIDE --> TPAP_HANDOFF
+  NO_FRICTION --> TPAP_HANDOFF
+  SOFT_NUDGE --> TPAP_HANDOFF
+  TPAP_HANDOFF --> NPCI_STYLE_RAIL
+  NPCI_STYLE_RAIL --> SETTLED
 ~~~
 
 ## Deployment and SDLC View
